@@ -4,7 +4,6 @@ import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicInteger;
 
 @Data
 public class Board {
@@ -90,26 +89,69 @@ public class Board {
         }
         //check diagonally
         for (int n = 0; n < this.column; n++) {
-            for (int i = 0; i <= n && i < this.row; i++){
-                line.append(getValue(n-i,i));
+            for (int i = 0; i <= n && i < this.row; i++) {
+                line.append(getValue(n - i, i));
             }
+            if (line.toString().contains(xLine)) {
+                System.out.println("X won the game");
+                return true;
+            } else if (line.toString().contains((oLine))) {
+                System.out.println("O won the game");
+                return true;
+            }
+            line.replace(0, line.length(), "");
         }
         for (int m = 0; m < this.row; m++) {
-            for (int i = 0; i <=  && i < this.row; i++){
-                line.append(getValue(this.row-i,m+i));
+            for (int i = 0; i < this.row - m && i < this.column; i++) {
+                line.append(getValue(this.column - i - 1, m + i));
             }
+            if (line.toString().contains(xLine)) {
+                System.out.println("X won the game");
+                return true;
+            } else if (line.toString().contains((oLine))) {
+                System.out.println("O won the game");
+                return true;
+            }
+            line.replace(0, line.length(), "");
         }
-
-
+        //////////////////////////////////////////
+        for (int n = 0; n < this.column; n++) {
+            for (int i = 0; i < this.column - n && i < this.row; i++) {
+                line.append(getValue(n + i, i));
+            }
+            if (line.toString().contains(xLine)) {
+                System.out.println("X won the game");
+                return true;
+            } else if (line.toString().contains((oLine))) {
+                System.out.println("O won the game");
+                return true;
+            }
+            line.replace(0, line.length(), "");
+        }
+        for (int m = 0; m < this.row; m++) {
+            for (int i = 0; i < (this.row - m) && i < this.column; i++) {
+                line.append(getValue(i, m + i));
+            }
+            if (line.toString().contains(xLine)) {
+                System.out.println("X won the game");
+                return true;
+            } else if (line.toString().contains((oLine))) {
+                System.out.println("O won the game");
+                return true;
+            }
+            line.replace(0, line.length(), "");
+        }
         return false;
     }
 
     public void printBoard() {
-        System.out.print(" ");
+        System.out.print("  ");
         for (int i = 0; i < this.column; i++) {
             System.out.print(i + "  ");
         }
         System.out.println();
-        this.board.forEach(System.out::println);
+        for (int i = 0; i < this.row; i++) {
+            System.out.println(Integer.toString(i) + this.board.get(i));
+        }
     }
 }
