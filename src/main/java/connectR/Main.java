@@ -14,19 +14,34 @@ public class Main {
 //        int r = scanner.nextInt();
 
         Board board = new Board(7, 6, 4);
-        int input;
-        while(true) {
-            board.printBoard();
+        board.printBoard();
+        int input = 0;
+        A: while (true) {
             input = scanner.nextInt();
-            if(!board.placeDisc(input, "O")){
+            while (!board.placeDisc(input, "O")) {
+                if (input == -1) {
+                    break A;
+                }
                 System.out.println("invalid move");
+                input = scanner.nextInt();
             }
             board.printBoard();
-            input = scanner.nextInt();
-            if(!board.placeDisc(input, "X")){
-                System.out.println("invalid move");
+            if(board.isWonBy()){
+                break A;
             }
 
+            input = scanner.nextInt();
+            while (!board.placeDisc(input, "X")) {
+                if (input == -1) {
+                    break A;
+                }
+                System.out.println("invalid move");
+                input = scanner.nextInt();
+            }
+            board.printBoard();
+            if(board.isWonBy()){
+                break A;
+            }
         }
     }
 }
