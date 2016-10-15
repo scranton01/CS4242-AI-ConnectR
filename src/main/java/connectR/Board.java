@@ -87,7 +87,7 @@ public class Board {
             }
             line.replace(0, line.length(), "");
         }
-        //check diagonally
+        //check diagonally upper-right to lower-left
         for (int n = 0; n < this.column; n++) {
             for (int i = 0; i <= n && i < this.row; i++) {
                 line.append(getValue(n - i, i));
@@ -114,7 +114,7 @@ public class Board {
             }
             line.replace(0, line.length(), "");
         }
-        //////////////////////////////////////////
+        //check diagonally upper-left to lower-right
         for (int n = 0; n < this.column; n++) {
             for (int i = 0; i < this.column - n && i < this.row; i++) {
                 line.append(getValue(n + i, i));
