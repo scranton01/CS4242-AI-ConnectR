@@ -26,6 +26,21 @@ public class Board {
         }
     }
 
+//    public Board clone (){
+//        Board newBoard = new Board(this.column, this.row, this.connect);
+//        List<List<StringBuilder>> gridValue = new ArrayList<>();
+//        for (int m = 0; m < this.row; m++) {
+//            List<StringBuilder> row = new ArrayList<>();
+//            for (int n = 0; n < this.column; n++) {
+//                row.add(new StringBuilder(this.getValue(n,m)));
+//            }
+//            gridValue.add(row);
+//        }
+//        newBoard.setBoard(gridValue);
+//        return newBoard;
+//    }
+
+
     private void addRow(List<StringBuilder> row) {
         this.board.add(row);
     }

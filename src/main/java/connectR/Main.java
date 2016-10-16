@@ -17,6 +17,7 @@ public class Main {
         board.printBoard();
         int input = 0;
         A: while (true) {
+            System.out.println("O's turn");
             input = scanner.nextInt();
             while (!board.placeDisc(input, "O")) {
                 if (input == -1) {
@@ -30,6 +31,7 @@ public class Main {
                 break A;
             }
 
+            System.out.println("X's turn");
             input = scanner.nextInt();
             while (!board.placeDisc(input, "X")) {
                 if (input == -1) {
