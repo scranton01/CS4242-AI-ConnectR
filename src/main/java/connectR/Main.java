@@ -1,6 +1,8 @@
 package connectR;
 
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.Scanner;
 
 public class Main {
@@ -13,37 +15,34 @@ public class Main {
 //        System.out.print("r=");
 //        int r = scanner.nextInt();
 
-        Board board = new Board(7, 6, 4);
-        board.printBoard();
-        int input = 0;
+        Board board = new Board(7, 6, 4, "X");
+        Board prevBoard=board.clone();
+        String input;
         A: while (true) {
-            System.out.println("O's turn");
-            input = scanner.nextInt();
-            while (!board.placeDisc(input, "O")) {
-                if (input == -1) {
+            board.printBoard();
+            System.out.println(board.getTurn() + "'s turn");
+            input = scanner.nextLine();
+            if (StringUtils.isNumeric(input)) {
+                prevBoard = board.clone();
+                while (!board.placeDisc(Integer.parseInt(input))) {
+                    System.out.println("invalid move");
+                    input = scanner.nextLine();
+                }
+                board.printBoard();
+                if (board.isWon()) {
+                    if(board.getTurn().equals("X")){
+                        System.out.println("O won the game");
+                    } else if(board.getTurn().equals("O")){
+                        System.out.println("X won the game");
+                    }
                     break A;
                 }
-                System.out.println("invalid move");
-                input = scanner.nextInt();
-            }
-            board.printBoard();
-            if(board.isWonBy()){
+            } else if(input.equals("q")){
                 break A;
+            } else if(input.equals("r")){
+                board = prevBoard;
             }
-
-            System.out.println("X's turn");
-            input = scanner.nextInt();
-            while (!board.placeDisc(input, "X")) {
-                if (input == -1) {
-                    break A;
-                }
-                System.out.println("invalid move");
-                input = scanner.nextInt();
-            }
-            board.printBoard();
-            if(board.isWonBy()){
-                break A;
-            }
+            //AI make move
         }
     }
 }

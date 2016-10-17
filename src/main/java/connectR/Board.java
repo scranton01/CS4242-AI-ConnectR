@@ -5,17 +5,20 @@ import lombok.Data;
 import java.util.ArrayList;
 import java.util.List;
 
+
 @Data
 public class Board {
     List<List<StringBuilder>> board;
     int column;
     int row;
     int connect;
+    String turn;
 
-    Board(int n, int m, int r) {
+    Board(int n, int m, int r, String t) {
         this.column = n;
         this.row = m;
         this.connect = r;
+        this.turn = t;
         board = new ArrayList<>();
         for (int i = 0; i < m; i++) {
             List<StringBuilder> row = new ArrayList<>();
@@ -26,19 +29,19 @@ public class Board {
         }
     }
 
-//    public Board clone (){
-//        Board newBoard = new Board(this.column, this.row, this.connect);
-//        List<List<StringBuilder>> gridValue = new ArrayList<>();
-//        for (int m = 0; m < this.row; m++) {
-//            List<StringBuilder> row = new ArrayList<>();
-//            for (int n = 0; n < this.column; n++) {
-//                row.add(new StringBuilder(this.getValue(n,m)));
-//            }
-//            gridValue.add(row);
-//        }
-//        newBoard.setBoard(gridValue);
-//        return newBoard;
-//    }
+    public Board clone() {
+        Board newBoard = new Board(this.column, this.row, this.connect, this.turn);
+        List<List<StringBuilder>> gridValue = new ArrayList<>();
+        for (int m = 0; m < this.row; m++) {
+            List<StringBuilder> row = new ArrayList<>();
+            for (int n = 0; n < this.column; n++) {
+                row.add(new StringBuilder(this.getValue(n, m)));
+            }
+            gridValue.add(row);
+        }
+        newBoard.setBoard(gridValue);
+        return newBoard;
+    }
 
 
     private void addRow(List<StringBuilder> row) {
@@ -53,20 +56,26 @@ public class Board {
         return this.board.get(m).get(n);
     }
 
-    public boolean placeDisc(int n, String value) {
+    public boolean placeDisc(int n) {
         if (n < 0 || n >= this.column) {
             return false;
         }
         for (int m = this.row - 1; m >= 0; m--) {
             if (this.board.get(m).get(n).toString().equals(" ")) {
-                setValue(n, m, value);
+                setValue(n, m, this.getTurn());
+                if (this.turn == "X") {
+                    this.turn = "O";
+                } else if (this.turn == "O") {
+                    this.turn = "X";
+                }
                 return true;
             }
+
         }
         return false;
     }
 
-    public boolean isWonBy() {
+    public boolean isWon() {
         StringBuilder line = new StringBuilder();
         StringBuilder xLine = new StringBuilder();
         StringBuilder oLine = new StringBuilder();
@@ -80,10 +89,10 @@ public class Board {
                 line.append(getValue(n, m));
             }
             if (line.toString().contains(xLine)) {
-                System.out.println("X won the game");
+//                System.out.println("X won the game");
                 return true;
             } else if (line.toString().contains((oLine))) {
-                System.out.println("O won the game");
+//                System.out.println("O won the game");
                 return true;
             }
             line.replace(0, line.length(), "");
@@ -94,10 +103,10 @@ public class Board {
                 line.append(getValue(n, m));
             }
             if (line.toString().contains(xLine)) {
-                System.out.println("X won the game");
+//                System.out.println("X won the game");
                 return true;
             } else if (line.toString().contains((oLine))) {
-                System.out.println("O won the game");
+//                System.out.println("O won the game");
                 return true;
             }
             line.replace(0, line.length(), "");
@@ -108,10 +117,10 @@ public class Board {
                 line.append(getValue(n - i, i));
             }
             if (line.toString().contains(xLine)) {
-                System.out.println("X won the game");
+//                System.out.println("X won the game");
                 return true;
             } else if (line.toString().contains((oLine))) {
-                System.out.println("O won the game");
+//                System.out.println("O won the game");
                 return true;
             }
             line.replace(0, line.length(), "");
@@ -121,10 +130,10 @@ public class Board {
                 line.append(getValue(this.column - i - 1, m + i));
             }
             if (line.toString().contains(xLine)) {
-                System.out.println("X won the game");
+//                System.out.println("X won the game");
                 return true;
             } else if (line.toString().contains((oLine))) {
-                System.out.println("O won the game");
+//                System.out.println("O won the game");
                 return true;
             }
             line.replace(0, line.length(), "");
@@ -135,10 +144,10 @@ public class Board {
                 line.append(getValue(n + i, i));
             }
             if (line.toString().contains(xLine)) {
-                System.out.println("X won the game");
+//                System.out.println("X won the game");
                 return true;
             } else if (line.toString().contains((oLine))) {
-                System.out.println("O won the game");
+//                System.out.println("O won the game");
                 return true;
             }
             line.replace(0, line.length(), "");
@@ -148,10 +157,10 @@ public class Board {
                 line.append(getValue(i, m + i));
             }
             if (line.toString().contains(xLine)) {
-                System.out.println("X won the game");
+//                System.out.println("X won the game");
                 return true;
             } else if (line.toString().contains((oLine))) {
-                System.out.println("O won the game");
+//                System.out.println("O won the game");
                 return true;
             }
             line.replace(0, line.length(), "");
@@ -160,13 +169,11 @@ public class Board {
     }
 
     public void printBoard() {
-        System.out.print("  ");
+        System.out.print(" ");
         for (int i = 0; i < this.column; i++) {
             System.out.print(i + "  ");
         }
         System.out.println();
-        for (int i = 0; i < this.row; i++) {
-            System.out.println(Integer.toString(i) + this.board.get(i));
-        }
+        this.board.forEach(System.out::println);
     }
 }
