@@ -12,9 +12,9 @@ public class Board {
     int column;
     int row;
     int connect;
-    String turn;
+    Turn turn;
 
-    Board(int n, int m, int r, String t) {
+    Board(int n, int m, int r, Turn t) {
         this.column = n;
         this.row = m;
         this.connect = r;
@@ -29,6 +29,10 @@ public class Board {
         }
     }
 
+    public enum Turn{
+        O,
+        X
+    }
     public Board clone() {
         Board newBoard = new Board(this.column, this.row, this.connect, this.turn);
         List<List<StringBuilder>> gridValue = new ArrayList<>();
@@ -48,8 +52,8 @@ public class Board {
         this.board.add(row);
     }
 
-    private void setValue(int n, int m, String value) {
-        this.board.get(m).get(n).replace(0, 1, value);
+    private void setValue(int n, int m, Turn value) {
+        this.board.get(m).get(n).replace(0, 1, value.toString());
     }
 
     public StringBuilder getValue(int n, int m) {
@@ -63,10 +67,18 @@ public class Board {
         for (int m = this.row - 1; m >= 0; m--) {
             if (this.board.get(m).get(n).toString().equals(" ")) {
                 setValue(n, m, this.getTurn());
-                if (this.turn == "X") {
-                    this.turn = "O";
-                } else if (this.turn == "O") {
-                    this.turn = "X";
+//                if (this.turn == "X") {
+//                    this.turn = "O";
+//                } else if (this.turn == "O") {
+//                    this.turn = "X";
+//                }
+                switch(this.turn){
+                    case X:
+                        this.turn=Turn.O;
+                        break;
+                    case O:
+                        this.turn=Turn.X;
+                        break;
                 }
                 return true;
             }
@@ -166,6 +178,18 @@ public class Board {
             line.replace(0, line.length(), "");
         }
         return false;
+    }
+
+    public boolean isTie() {
+        boolean isFull = true;
+        for (int n = 0; n < this.column; n++) {
+            for (int m = 0; m < this.row; m++) {
+                if (getValue(n, m).equals(" ")) {
+                    isFull = false;
+                }
+            }
+        }
+        return (!isWon()) && isFull;
     }
 
     public void printBoard() {

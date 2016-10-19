@@ -15,11 +15,11 @@ public class Main {
 //        System.out.print("r=");
 //        int r = scanner.nextInt();
 
-        Board board = new Board(7, 6, 4, "X");
+        Board board = new Board(7, 6, 4, Board.Turn.O);
+        board.printBoard();
         Board prevBoard=board.clone();
         String input;
         A: while (true) {
-            board.printBoard();
             System.out.println(board.getTurn() + "'s turn");
             input = scanner.nextLine();
             if (StringUtils.isNumeric(input)) {
@@ -30,9 +30,9 @@ public class Main {
                 }
                 board.printBoard();
                 if (board.isWon()) {
-                    if(board.getTurn().equals("X")){
+                    if(board.getTurn()==Board.Turn.X){
                         System.out.println("O won the game");
-                    } else if(board.getTurn().equals("O")){
+                    } else if(board.getTurn()==Board.Turn.O){
                         System.out.println("X won the game");
                     }
                     break A;
@@ -41,6 +41,7 @@ public class Main {
                 break A;
             } else if(input.equals("r")){
                 board = prevBoard;
+                board.printBoard();
             }
             //AI make move
         }

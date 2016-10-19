@@ -2,19 +2,14 @@ package connectR;
 
 import java.util.Scanner;
 
-/**
- * Created by Jun on 10/17/2016.
- */
+
 public class Test {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
-        Board board = new Board(3, 2, 2, "X");
-        board.printBoard();
+        Board board = new Board(7, 6, 4, Board.Turn.X);
 
-        board.placeDisc(0);
-        board.printBoard();
-        Node node = new Node(board);
-        System.out.println("----------------------");
+
+        Node node = new Node (board,6);
         node.printTree();
 
     }
