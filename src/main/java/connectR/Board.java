@@ -29,10 +29,11 @@ public class Board {
         }
     }
 
-    public enum Turn{
+    public enum Turn {
         O,
         X
     }
+
     public Board clone() {
         Board newBoard = new Board(this.column, this.row, this.connect, this.turn);
         List<List<StringBuilder>> gridValue = new ArrayList<>();
@@ -65,19 +66,14 @@ public class Board {
             return false;
         }
         for (int m = this.row - 1; m >= 0; m--) {
-            if (this.board.get(m).get(n).toString().equals(" ")) {
+            if ((" ").equals(this.board.get(m).get(n).toString())) {
                 setValue(n, m, this.getTurn());
-//                if (this.turn == "X") {
-//                    this.turn = "O";
-//                } else if (this.turn == "O") {
-//                    this.turn = "X";
-//                }
-                switch(this.turn){
+                switch (this.turn) {
                     case X:
-                        this.turn=Turn.O;
+                        this.turn = Turn.O;
                         break;
                     case O:
-                        this.turn=Turn.X;
+                        this.turn = Turn.X;
                         break;
                 }
                 return true;
@@ -184,7 +180,7 @@ public class Board {
         boolean isFull = true;
         for (int n = 0; n < this.column; n++) {
             for (int m = 0; m < this.row; m++) {
-                if (getValue(n, m).equals(" ")) {
+                if ((" ").equals(getValue(n, m).toString())) {
                     isFull = false;
                 }
             }
@@ -192,12 +188,24 @@ public class Board {
         return (!isWon()) && isFull;
     }
 
-    public void printBoard() {
+    void printBoard() {
         System.out.print(" ");
         for (int i = 0; i < this.column; i++) {
             System.out.print(i + "  ");
         }
         System.out.println();
         this.board.forEach(System.out::println);
+    }
+
+    int findColumn(Board board) {
+        int columnIndex=-1;
+        for (int m = 0; m < this.row; m++) {
+            for (int n = 0; n < this.column; n++) {
+                if(getValue(n,m)!=board.getValue(n,m)){
+                    columnIndex = n;
+                }
+            }
+        }
+        return columnIndex;
     }
 }

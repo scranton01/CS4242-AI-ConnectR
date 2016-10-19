@@ -10,58 +10,59 @@ import java.util.List;
 public class Utility {
     @Value
     @Getter
-    private class StateValueIndex {
-        double stateValue;
+    private class StateValue {
+        double value;
+        int index;
         Board board;
     }
 
     public int minMaxDecision(Board board, int depth, Board.Turn maxPlayer) {
-        int stateIndex = evaluateNode(board, depth, maxPlayer).getIndex();
-        Node node = new Node(board, depth);
-        node.getChildren().get(stateIndex);
+        Node node = new Node(board,depth);
+        int index = evaluateNode(node, maxPlayer).getIndex();
+        return board.findColumn(node.getChildren().get(index).getBoard());
+
     }
 
-    public StateValueIndex evaluateNode(Board board, int depth, Board.Turn maxPlayer) {
-        Node node = new Node(board, depth);
+    private StateValue evaluateNode(Node node, Board.Turn maxPlayer) {
         if (node.getChildren().isEmpty()) {
-            return new StateValueIndex(evaluateBoard(board, maxPlayer), board);
+            return new StateValue(evaluateBoard(node.getBoard(), maxPlayer), -1, node.getBoard());
         }
-        List<Double> stateValueList = new ArrayList<>();
+        List<StateValue> stateValueList = new ArrayList<>();
         for (Node child : node.getChildren()) {
-            stateValueList.add(evaluateNode(child.getBoard(), depth, maxPlayer).getStateValue());
+            stateValueList.add(evaluateNode(child, maxPlayer));
         }
         if (node.getBoard().getTurn() == maxPlayer) {
-            return new StateValueIndex(findMax(stateValueList).getStateValue(), );
+            return findMax(stateValueList);
         } else {
-            return new StateValueIndex(findMin(stateValueList).getStateValue(), findMax(stateValueList).getIndex());
+            return findMin(stateValueList);
         }
     }
 
-    private StateValueIndex findMax(List<Double> stateValueList) {
-        double maxValue = stateValueList.get(0);
+    private StateValue findMax(List<StateValue> stateValueList) {
+        double maxValue = stateValueList.get(0).getValue();
         int maxIndex = 0;
         for (int i = 0; i < stateValueList.size(); i++) {
-            if (stateValueList.get(i) > maxValue) {
-                maxValue = stateValueList.get(i);
+            if (stateValueList.get(i).getValue() > maxValue) {
+                maxValue = stateValueList.get(i).getValue();
                 maxIndex = i;
             }
         }
-        return new StateValueIndex(maxValue, maxIndex);
+        return new StateValue(maxValue, maxIndex, stateValueList.get(maxIndex).getBoard());
     }
 
-    private StateValueIndex findMin(List<Double> stateValueList) {
-        double minValue = stateValueList.get(0);
+    private StateValue findMin(List<StateValue> stateValueList) {
+        double minValue = stateValueList.get(0).getValue();
         int minIndex = 0;
         for (int i = 0; i < stateValueList.size(); i++) {
-            if (stateValueList.get(i) < minValue) {
-                minValue = stateValueList.get(i);
+            if (stateValueList.get(i).getValue() < minValue) {
+                minValue = stateValueList.get(i).getValue();
                 minIndex = i;
             }
         }
-        return new StateValueIndex(minValue, minIndex);
+        return new StateValue(minValue, minIndex, stateValueList.get(minIndex).getBoard());
     }
 
-    public static double evaluateBoard(Board board, Board.Turn maxPlayer) {
+    static double evaluateBoard(Board board, Board.Turn maxPlayer) {
         if (board.isWon()) {
             if (board.getTurn() == maxPlayer) {
                 return -1;
