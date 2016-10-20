@@ -18,6 +18,7 @@ public class Utility {
 
     public int minMaxDecision(Board board, int depth, Board.Turn maxPlayer) {
         Node node = new Node(board,depth);
+        node.printTree();
         int index = evaluateNode(node, maxPlayer).getIndex();
         return board.findColumn(node.getChildren().get(index).getBoard());
 
@@ -66,7 +67,7 @@ public class Utility {
         if (board.isWon()) {
             if (board.getTurn() == maxPlayer) {
                 return -1;
-            } else if (board.getTurn() == maxPlayer) {
+            } else if (board.getTurn() != maxPlayer) {
                 return 1;
             }
         }

@@ -14,8 +14,12 @@ public class Test {
         board.placeDisc(1);
         Utility util = new Utility();
         board.printBoard();
+        Node node = new Node(board,2);
+        node.printTree();
         System.out.println(util.minMaxDecision(board,2, Board.Turn.O));
-
+//        board.placeDisc(1);
+//        board.printBoard();
+//        System.out.println(util.evaluateBoard(board, Board.Turn.O));
 
 
     }
