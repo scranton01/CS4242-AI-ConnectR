@@ -28,7 +28,7 @@ public class Node {
     }
 
     private void printTreeDfs(Node node, int depth) {
-        System.out.println("level: "+depth);
+        System.out.println("level: " + depth);
         depth++;
         node.getBoard().printBoard();
         System.out.println();
@@ -41,7 +41,7 @@ public class Node {
     }
 
     private void generatePossibleStates(Node node, int depthCounter) {
-        if(depthCounter==this.depth){
+        if (depthCounter == this.depth) {
             return;
         }
         depthCounter++;

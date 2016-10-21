@@ -4,11 +4,10 @@ package connectR;
 public class Utility {
 
 
-    public int minMaxDecision(Board board, int depth, Board.Turn maxPlayer) {
+    int minMaxDecision(Board board, int depth, Board.Turn maxPlayer) {
         Node node = new Node(board, depth);
-        Node maxNode=evaluateNode(node, maxPlayer);
+        Node maxNode = evaluateNode(node, maxPlayer);
         return board.findColumn(maxNode.getBoard());
-
     }
 
     private Node evaluateNode(Node node, Board.Turn maxPlayer) {
@@ -21,7 +20,6 @@ public class Utility {
         }
         if (node.getBoard().getTurn() == maxPlayer) {
             return findMax(node);
-
         } else {
             return findMin(node);
         }
@@ -31,7 +29,7 @@ public class Utility {
         double maxValue = node.getChildren().get(0).getStateValue();
         Node maxNode = new Node();
         for (Node child : node.getChildren()) {
-            if (child.getStateValue() > maxValue) {
+            if (child.getStateValue() >= maxValue) {
                 maxValue = child.getStateValue();
                 maxNode = child;
             }
@@ -44,7 +42,7 @@ public class Utility {
         double minValue = node.getChildren().get(0).getStateValue();
         Node minNode = new Node();
         for (Node child : node.getChildren()) {
-            if (child.getStateValue() < minValue) {
+            if (child.getStateValue() <= minValue) {
                 minValue = child.getStateValue();
                 minNode = child;
             }
@@ -61,6 +59,17 @@ public class Utility {
                 return 1;
             }
         }
-        return 0;
+        if (board.isTie()) {
+            return 0;
+        }
+        if (board.getTurn() == maxPlayer) {
+            if (maxPlayer == Board.Turn.O) {
+                return -board.mostConnect(Board.Turn.X) / 10.0;
+            } else {
+                return -board.mostConnect(Board.Turn.O) / 10.0;
+            }
+        } else {
+            return board.mostConnect(maxPlayer) / 10.0;
+        }
     }
 }

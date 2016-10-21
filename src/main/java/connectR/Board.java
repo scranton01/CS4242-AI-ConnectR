@@ -2,8 +2,14 @@ package connectR;
 
 import lombok.Data;
 
+import javax.swing.*;
+import java.awt.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static java.awt.Color.black;
+import static java.awt.Color.red;
 
 
 @Data
@@ -97,10 +103,8 @@ public class Board {
                 line.append(getValue(n, m));
             }
             if (line.toString().contains(xLine)) {
-//                System.out.println("X won the game");
                 return true;
             } else if (line.toString().contains((oLine))) {
-//                System.out.println("O won the game");
                 return true;
             }
             line.replace(0, line.length(), "");
@@ -111,10 +115,8 @@ public class Board {
                 line.append(getValue(n, m));
             }
             if (line.toString().contains(xLine)) {
-//                System.out.println("X won the game");
                 return true;
             } else if (line.toString().contains((oLine))) {
-//                System.out.println("O won the game");
                 return true;
             }
             line.replace(0, line.length(), "");
@@ -125,10 +127,8 @@ public class Board {
                 line.append(getValue(n - i, i));
             }
             if (line.toString().contains(xLine)) {
-//                System.out.println("X won the game");
                 return true;
             } else if (line.toString().contains((oLine))) {
-//                System.out.println("O won the game");
                 return true;
             }
             line.replace(0, line.length(), "");
@@ -138,10 +138,8 @@ public class Board {
                 line.append(getValue(this.column - i - 1, m + i));
             }
             if (line.toString().contains(xLine)) {
-//                System.out.println("X won the game");
                 return true;
             } else if (line.toString().contains((oLine))) {
-//                System.out.println("O won the game");
                 return true;
             }
             line.replace(0, line.length(), "");
@@ -152,10 +150,8 @@ public class Board {
                 line.append(getValue(n + i, i));
             }
             if (line.toString().contains(xLine)) {
-//                System.out.println("X won the game");
                 return true;
             } else if (line.toString().contains((oLine))) {
-//                System.out.println("O won the game");
                 return true;
             }
             line.replace(0, line.length(), "");
@@ -165,10 +161,8 @@ public class Board {
                 line.append(getValue(i, m + i));
             }
             if (line.toString().contains(xLine)) {
-//                System.out.println("X won the game");
                 return true;
             } else if (line.toString().contains((oLine))) {
-//                System.out.println("O won the game");
                 return true;
             }
             line.replace(0, line.length(), "");
@@ -195,17 +189,140 @@ public class Board {
         }
         System.out.println();
         this.board.forEach(System.out::println);
+
+        ClassLoader classLoader = this.getClass().getClassLoader();
+        ImageIcon red = new ImageIcon(classLoader.getResource("red.png"));
+        ImageIcon black = new ImageIcon(classLoader.getResource("black.png"));
+        ImageIcon blank = new ImageIcon(classLoader.getResource("blank.png"));
+
+        JPanel grid = new JPanel();
+        grid.setLayout(new GridLayout(this.row+1, this.column));
+        for(int i=0;i<this.column;i++){
+            grid.add(new JLabel(String.valueOf(i)));
+        }
+        for (int m = 0; m < this.row; m++) {
+            for (int n = 0; n < this.column; n++) {
+                if(getValue(n,m).toString().equals("O")) {
+                    grid.add(new JLabel(red));
+                }
+                else if(getValue(n,m).toString().equals("X"))
+                    grid.add(new JLabel(black));
+                else{
+                    grid.add(new JLabel(blank));
+                }
+            }
+        }
+        JFrame frame = new JFrame("Map");
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setPreferredSize(new Dimension(640, 500));
+        frame.add(grid);
+        frame.pack();
+        frame.setVisible(true);
     }
 
     int findColumn(Board board) {
-        int columnIndex=-1;
+        int columnIndex = -1;
         for (int m = 0; m < this.row; m++) {
             for (int n = 0; n < this.column; n++) {
-                if(!getValue(n,m).toString().equals(board.getValue(n,m).toString())){
+                if (!getValue(n, m).toString().equals(board.getValue(n, m).toString())) {
                     columnIndex = n;
                 }
             }
         }
         return columnIndex;
+    }
+
+    int mostConnect(Turn turn) {
+        StringBuilder line = new StringBuilder();
+        StringBuilder maxX = new StringBuilder();
+        StringBuilder maxO = new StringBuilder();
+
+        //check horizontal
+        for (int m = 0; m < this.row; m++) {
+            for (int n = 0; n < this.column; n++) {
+                line.append(getValue(n, m));
+            }
+            for (int i = 0; i < line.length(); i++) {
+                if (line.toString().contains(maxX + "X")) {
+                    maxX.append("X");
+                } else if (line.toString().contains((maxO + "O"))) {
+                    maxO.append("O");
+                }
+            }
+            line.replace(0, line.length(), "");
+        }
+        //check vertically
+        for (int n = 0; n < this.column; n++) {
+            for (int m = 0; m < this.row; m++) {
+                line.append(getValue(n, m));
+            }
+            for (int i = 0; i < line.length(); i++) {
+                if (line.toString().contains(maxX + "X")) {
+                    maxX.append("X");
+                } else if (line.toString().contains((maxO + "O"))) {
+                    maxO.append("O");
+                }
+            }
+            line.replace(0, line.length(), "");
+        }
+        //check diagonally upper-right to lower-left
+        for (int n = 0; n < this.column; n++) {
+            for (int i = 0; i <= n && i < this.row; i++) {
+                line.append(getValue(n - i, i));
+            }
+            for (int i = 0; i < line.length(); i++) {
+                if (line.toString().contains(maxX + "X")) {
+                    maxX.append("X");
+                } else if (line.toString().contains((maxO + "O"))) {
+                    maxO.append("O");
+                }
+            }
+            line.replace(0, line.length(), "");
+        }
+        for (int m = 0; m < this.row; m++) {
+            for (int i = 0; i < this.row - m && i < this.column; i++) {
+                line.append(getValue(this.column - i - 1, m + i));
+            }
+            for (int i = 0; i < line.length(); i++) {
+                if (line.toString().contains(maxX + "X")) {
+                    maxX.append("X");
+                } else if (line.toString().contains((maxO + "O"))) {
+                    maxO.append("O");
+                }
+            }
+            line.replace(0, line.length(), "");
+        }
+        //check diagonally upper-left to lower-right
+        for (int n = 0; n < this.column; n++) {
+            for (int i = 0; i < this.column - n && i < this.row; i++) {
+                line.append(getValue(n + i, i));
+            }
+            for (int i = 0; i < line.length(); i++) {
+                if (line.toString().contains(maxX + "X")) {
+                    maxX.append("X");
+                } else if (line.toString().contains((maxO + "O"))) {
+                    maxO.append("O");
+                }
+            }
+            line.replace(0, line.length(), "");
+        }
+        for (int m = 0; m < this.row; m++) {
+            for (int i = 0; i < (this.row - m) && i < this.column; i++) {
+                line.append(getValue(i, m + i));
+            }
+            for (int i = 0; i < line.length(); i++) {
+                if (line.toString().contains(maxX + "X")) {
+                    maxX.append("X");
+                } else if (line.toString().contains((maxO + "O"))) {
+                    maxO.append("O");
+                }
+            }
+            line.replace(0, line.length(), "");
+        }
+        if (turn == Turn.O) {
+            return maxO.length();
+        } else {
+            return maxX.length();
+        }
     }
 }
