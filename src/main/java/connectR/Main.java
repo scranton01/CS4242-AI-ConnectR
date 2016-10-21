@@ -17,9 +17,9 @@ public class Main {
 
         Board board = new Board(7, 6, 4, Board.Turn.O);
         board.printBoard();
-        Board prevBoard=board.clone();
+        Board prevBoard = board.clone();
         String input;
-        A: while (true) {
+        while (true) {
             System.out.println(board.getTurn() + "'s turn");
             input = scanner.nextLine();
             if (StringUtils.isNumeric(input)) {
@@ -30,20 +30,48 @@ public class Main {
                 }
                 board.printBoard();
                 if (board.isWon()) {
-                    if(board.getTurn()==Board.Turn.X){
+                    if (board.getTurn() == Board.Turn.X) {
                         System.out.println("O won the game");
-                    } else if(board.getTurn()==Board.Turn.O){
+                    } else if (board.getTurn() == Board.Turn.O) {
                         System.out.println("X won the game");
                     }
-                    break A;
+                    break;
                 }
-            } else if(input.equals("q")){
-                break A;
-            } else if(input.equals("r")){
+            } else if (input.equals("q")) {
+                break;
+            } else if (input.equals("r")) {
                 board = prevBoard;
                 board.printBoard();
             }
-            //AI make move
+///////////////////////////// AI move
+            System.out.println(board.getTurn() + "'s turn");
+            Utility util = new Utility();
+            System.out.println(util.minMaxDecision(board, 5, Board.Turn.X));
+            input = scanner.nextLine();
+            if (StringUtils.isNumeric(input)) {
+                prevBoard = board.clone();
+                while (!board.placeDisc(Integer.parseInt(input))) {
+                    System.out.println("invalid move");
+                    input = scanner.nextLine();
+                }
+                board.printBoard();
+                if (board.isWon()) {
+                    if (board.getTurn() == Board.Turn.X) {
+                        System.out.println("O won the game");
+                    } else if (board.getTurn() == Board.Turn.O) {
+                        System.out.println("X won the game");
+                    }
+                    break;
+                }
+
+
+            } else if (input.equals("q")) {
+                break;
+            } else if (input.equals("r")) {
+                board = prevBoard;
+                board.printBoard();
+            }
         }
     }
 }
+

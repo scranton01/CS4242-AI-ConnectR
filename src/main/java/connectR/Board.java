@@ -201,7 +201,7 @@ public class Board {
         int columnIndex=-1;
         for (int m = 0; m < this.row; m++) {
             for (int n = 0; n < this.column; n++) {
-                if(getValue(n,m)!=board.getValue(n,m)){
+                if(!getValue(n,m).toString().equals(board.getValue(n,m).toString())){
                     columnIndex = n;
                 }
             }

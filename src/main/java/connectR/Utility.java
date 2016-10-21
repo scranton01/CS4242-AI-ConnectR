@@ -1,66 +1,56 @@
 package connectR;
 
 
-import lombok.Getter;
-import lombok.Value;
-
-import java.util.ArrayList;
-import java.util.List;
-
 public class Utility {
-    @Value
-    @Getter
-    private class StateValue {
-        double value;
-        int index;
-        Board board;
-    }
+
 
     public int minMaxDecision(Board board, int depth, Board.Turn maxPlayer) {
-        Node node = new Node(board,depth);
-        node.printTree();
-        int index = evaluateNode(node, maxPlayer).getIndex();
-        return board.findColumn(node.getChildren().get(index).getBoard());
+        Node node = new Node(board, depth);
+        Node maxNode=evaluateNode(node, maxPlayer);
+        return board.findColumn(maxNode.getBoard());
 
     }
 
-    private StateValue evaluateNode(Node node, Board.Turn maxPlayer) {
+    private Node evaluateNode(Node node, Board.Turn maxPlayer) {
         if (node.getChildren().isEmpty()) {
-            return new StateValue(evaluateBoard(node.getBoard(), maxPlayer), -1, node.getBoard());
+            node.setStateValue(evaluateBoard(node.getBoard(), maxPlayer));
+            return node;
         }
-        List<StateValue> stateValueList = new ArrayList<>();
         for (Node child : node.getChildren()) {
-            stateValueList.add(evaluateNode(child, maxPlayer));
+            evaluateNode(child, maxPlayer);
         }
         if (node.getBoard().getTurn() == maxPlayer) {
-            return findMax(stateValueList);
+            return findMax(node);
+
         } else {
-            return findMin(stateValueList);
+            return findMin(node);
         }
     }
 
-    private StateValue findMax(List<StateValue> stateValueList) {
-        double maxValue = stateValueList.get(0).getValue();
-        int maxIndex = 0;
-        for (int i = 0; i < stateValueList.size(); i++) {
-            if (stateValueList.get(i).getValue() > maxValue) {
-                maxValue = stateValueList.get(i).getValue();
-                maxIndex = i;
+    private Node findMax(Node node) {
+        double maxValue = node.getChildren().get(0).getStateValue();
+        Node maxNode = new Node();
+        for (Node child : node.getChildren()) {
+            if (child.getStateValue() > maxValue) {
+                maxValue = child.getStateValue();
+                maxNode = child;
             }
         }
-        return new StateValue(maxValue, maxIndex, stateValueList.get(maxIndex).getBoard());
+        node.setStateValue(maxValue);
+        return maxNode;
     }
 
-    private StateValue findMin(List<StateValue> stateValueList) {
-        double minValue = stateValueList.get(0).getValue();
-        int minIndex = 0;
-        for (int i = 0; i < stateValueList.size(); i++) {
-            if (stateValueList.get(i).getValue() < minValue) {
-                minValue = stateValueList.get(i).getValue();
-                minIndex = i;
+    private Node findMin(Node node) {
+        double minValue = node.getChildren().get(0).getStateValue();
+        Node minNode = new Node();
+        for (Node child : node.getChildren()) {
+            if (child.getStateValue() < minValue) {
+                minValue = child.getStateValue();
+                minNode = child;
             }
         }
-        return new StateValue(minValue, minIndex, stateValueList.get(minIndex).getBoard());
+        node.setStateValue(minValue);
+        return minNode;
     }
 
     static double evaluateBoard(Board board, Board.Turn maxPlayer) {
