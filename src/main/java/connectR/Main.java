@@ -21,12 +21,12 @@ public class Main {
             case "1":
                 while (true) {
                     System.out.println(board.getTurn() + "'s turn\nr=redo\nq=quite");
+                    String input;
                     if (board.getTurn() == Board.Turn.O) {
-                        String input = JOptionPane.showInputDialog("Red's turn\nr=redo\nq=quite");
+                        input = JOptionPane.showInputDialog("Red's turn\nr=redo\nq=quite");
                     } else {
-                        String input = JOptionPane.showInputDialog("Black's turn\nr=redo\nq=quite");
+                        input = JOptionPane.showInputDialog("Black's turn\nr=redo\nq=quite");
                     }
-                    String input = JOptionPane.showInputDialog(board.getTurn() + "'s turn\nr=redo\nq=quite");
                     if (StringUtils.isNumeric(input)) {
                         prevBoard = board.clone();
                         while (!board.placeDisc(Integer.parseInt(input))) {
@@ -123,6 +123,7 @@ public class Main {
                         break;
                     case "2":
                         String input;
+                        A:
                         while (true) {
                             boolean redoFlag = true;
                             while (redoFlag) {
@@ -152,7 +153,7 @@ public class Main {
                                             System.out.println("X won the game");
                                             JOptionPane.showMessageDialog(null, "Black won the game");
                                         }
-                                        break;
+                                        break A;
                                     }
                                 } else if (input.equals("q")) {
                                     break;
